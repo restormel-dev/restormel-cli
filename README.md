@@ -47,6 +47,13 @@ One command; the CLI picks the right mode. (If you set up the global command, yo
 
 ---
 
+## Updates
+
+- **CLI:** When a newer version of the CLI is available (after you publish to npm), the CLI shows a one-line message at the end of the run with the command to update (e.g. `npx restormel@latest`). The check is non-blocking and does not fail if offline.
+- **Injected content (.cursorrules, audit script):** Re-run the CLI in your project and choose **Yes** to “Inject Restormel…”. The CLI fetches the latest `.cursorrules` from the starter and overwrites your local copy and `scripts/audit.ts`. If your local `.cursorrules` is older than the remote, the prompt will say “(A newer .cursorrules is available.)” so you know to update. **Note:** Re-injecting overwrites any local edits to those files.
+
+---
+
 ## Optional: global `restormel` command
 
 If you want to type `restormel` from any folder (without the path), run `npm run link` from inside restormel-cli. If you get **EACCES / permission denied**, npm is trying to write to a system directory. Fix it once by using a directory you own:
