@@ -33,6 +33,12 @@ function isGreenfield(cwd: string): boolean {
   }
 }
 
+function getPackageManager(cwd: string): "pnpm" | "yarn" | "npm" {
+  if (fs.existsSync(path.join(cwd, "pnpm-lock.yaml"))) return "pnpm";
+  if (fs.existsSync(path.join(cwd, "yarn.lock"))) return "yarn";
+  return "npm";
+}
+
 async function runGreenfield(cwd: string): Promise<void> {
   const sourceUrl = STARTER_REPO_URL.endsWith("/") ? STARTER_REPO_URL : `${STARTER_REPO_URL}/`;
   console.log(chalk.gray(`  Source: ${chalk.hex(BLUE)("official Restormel starter")} — ${sourceUrl}`));
@@ -195,14 +201,22 @@ async function runBrownfield(cwd: string): Promise<void> {
     process.exit(0);
   }
   if (installDeps) {
+    const pm = getPackageManager(cwd);
     const spin = p.spinner();
-    spin.start("Installing security dependencies...");
+    spin.start(`Installing security dependencies (${pm})...`);
     try {
-      await execa("npm", ["install", "zod", "server-only", "@supabase/ssr"], { cwd, stdio: "inherit" });
+      if (pm === "pnpm") {
+        await execa("pnpm", ["add", "zod", "server-only", "@supabase/ssr"], { cwd, stdio: "inherit" });
+      } else if (pm === "yarn") {
+        await execa("yarn", ["add", "zod", "server-only", "@supabase/ssr"], { cwd, stdio: "inherit" });
+      } else {
+        await execa("npm", ["install", "zod", "server-only", "@supabase/ssr"], { cwd, stdio: "inherit" });
+      }
       spin.stop("Installed.");
     } catch (err) {
       spin.stop("Install failed.");
       console.error(chalk.yellow("Install error:"), err instanceof Error ? err.message : err);
+      console.error(chalk.gray(`You can install manually: ${pm} add zod server-only @supabase/ssr`));
     }
   }
   p.outro(chalk.hex(BLUE)("Restormel injection complete. ") + "🏰");
