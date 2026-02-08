@@ -1,8 +1,8 @@
-# Restormel
+# Restormel CLI
 
-**Bank-grade security architecture for Next.js — one command.**
+**Official CLI for Restormel: bank-grade security architecture for Next.js.** One command to scaffold a new secure Next.js app or inject security rules and audit tooling into an existing project. No config.
 
-Run `restormel` from a **blank folder** → new Restormel project. Run it from an **existing project** → inject security rules and audit tooling. No config.
+Run `restormel` from a **blank folder** → new Restormel project. Run it from an **existing project** → inject security rules and audit tooling. New projects are scaffolded from the [Restormel starter template](https://github.com/restormel-dev/restormel-starter).
 
 ---
 
@@ -144,6 +144,12 @@ The CLI uses the [restormel-starter](https://github.com/restormel-dev/restormel-
 
 - **CLI:** Dependencies are minimal; run `npm audit` in the restormel-cli repo and fix any reported issues.
 - **Starter:** The [restormel-starter](https://github.com/restormel-dev/restormel-starter) repo uses Vitest 4 and npm overrides for `glob` to avoid deprecated/vulnerable deps. Keep dependencies up to date and run `npm audit` there so new projects get a clean tree.
+
+---
+
+## See also
+
+- **[restormel-starter](https://github.com/restormel-dev/restormel-starter)** — The Next.js template this CLI uses for greenfield projects. Secure defaults, Vitest, ESLint, pre-commit.
 
 ---
 

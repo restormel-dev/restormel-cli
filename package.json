@@ -17,14 +17,27 @@
   "keywords": [
     "restormel",
     "next.js",
+    "nextjs",
     "security",
-    "cli"
+    "cli",
+    "create-next-app",
+    "scaffolding",
+    "bank-grade",
+    "cursor",
+    "cursorrules",
+    "audit",
+    "brownfield",
+    "greenfield"
   ],
-  "author": "",
+  "author": "Allotment Technology Ltd",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/restormel-dev/restormel-cli.git"
+  },
+  "homepage": "https://github.com/restormel-dev/restormel-cli#readme",
+  "bugs": {
+    "url": "https://github.com/restormel-dev/restormel-cli/issues"
   },
   "engines": {
     "node": ">=18.0.0"
