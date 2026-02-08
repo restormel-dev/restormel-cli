@@ -79,6 +79,7 @@ async function runGreenfield(cwd: string): Promise<void> {
   try {
     await execa("npx", [
       "create-next-app@latest",
+      "--yes",
       "-e",
       sourceUrl,
       ".",
