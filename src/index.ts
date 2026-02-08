@@ -206,7 +206,7 @@ async function runBrownfield(cwd: string): Promise<void> {
     spin.start(`Installing security dependencies (${pm})...`);
     try {
       if (pm === "pnpm") {
-        await execa("pnpm", ["add", "zod", "server-only", "@supabase/ssr"], { cwd, stdio: "inherit" });
+        await execa("pnpm", ["add", "-w", "zod", "server-only", "@supabase/ssr"], { cwd, stdio: "inherit" });
       } else if (pm === "yarn") {
         await execa("yarn", ["add", "zod", "server-only", "@supabase/ssr"], { cwd, stdio: "inherit" });
       } else {
@@ -216,7 +216,8 @@ async function runBrownfield(cwd: string): Promise<void> {
     } catch (err) {
       spin.stop("Install failed.");
       console.error(chalk.yellow("Install error:"), err instanceof Error ? err.message : err);
-      console.error(chalk.gray(`You can install manually: ${pm} add zod server-only @supabase/ssr`));
+      const manualCmd = pm === "pnpm" ? "pnpm add -w zod server-only @supabase/ssr" : pm === "yarn" ? "yarn add zod server-only @supabase/ssr" : "npm install zod server-only @supabase/ssr";
+      console.error(chalk.gray(`You can install manually: ${manualCmd}`));
     }
   }
   p.outro(chalk.hex(BLUE)("Restormel injection complete. ") + "🏰");
