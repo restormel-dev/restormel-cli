@@ -193,7 +193,7 @@ async function runBrownfield(cwd: string): Promise<void> {
   }
 
   const installDeps = await p.confirm({
-    message: "Install security dependencies (zod, server-only, @supabase/ssr)?",
+    message: "Install security dependencies (zod, server-only, @supabase/ssr) and audit script deps (ts-node, chalk)?",
     initialValue: true,
   });
   if (p.isCancel(installDeps)) {
@@ -203,20 +203,23 @@ async function runBrownfield(cwd: string): Promise<void> {
   if (installDeps) {
     const pm = getPackageManager(cwd);
     const spin = p.spinner();
-    spin.start(`Installing security dependencies (${pm})...`);
+    spin.start(`Installing dependencies (${pm})...`);
     try {
       if (pm === "pnpm") {
         await execa("pnpm", ["add", "-w", "zod", "server-only", "@supabase/ssr"], { cwd, stdio: "inherit" });
+        await execa("pnpm", ["add", "-w", "-D", "ts-node", "chalk"], { cwd, stdio: "inherit" });
       } else if (pm === "yarn") {
         await execa("yarn", ["add", "zod", "server-only", "@supabase/ssr"], { cwd, stdio: "inherit" });
+        await execa("yarn", ["add", "-D", "ts-node", "chalk"], { cwd, stdio: "inherit" });
       } else {
         await execa("npm", ["install", "zod", "server-only", "@supabase/ssr"], { cwd, stdio: "inherit" });
+        await execa("npm", ["install", "-D", "ts-node", "chalk"], { cwd, stdio: "inherit" });
       }
       spin.stop("Installed.");
     } catch (err) {
       spin.stop("Install failed.");
       console.error(chalk.yellow("Install error:"), err instanceof Error ? err.message : err);
-      const manualCmd = pm === "pnpm" ? "pnpm add -w zod server-only @supabase/ssr" : pm === "yarn" ? "yarn add zod server-only @supabase/ssr" : "npm install zod server-only @supabase/ssr";
+      const manualCmd = pm === "pnpm" ? "pnpm add -w zod server-only @supabase/ssr && pnpm add -w -D ts-node chalk" : pm === "yarn" ? "yarn add zod server-only @supabase/ssr && yarn add -D ts-node chalk" : "npm install zod server-only @supabase/ssr && npm install -D ts-node chalk";
       console.error(chalk.gray(`You can install manually: ${manualCmd}`));
     }
   }
