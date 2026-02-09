@@ -5,7 +5,7 @@
   "type": "module",
   "main": "./dist/index.js",
   "bin": {
-    "restormel": "./dist/index.js"
+    "restormel": "dist/index.js"
   },
   "scripts": {
     "build": "tsc && node scripts/add-shebang.cjs",
@@ -34,7 +34,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/restormel-dev/restormel-cli.git"
+    "url": "git+https://github.com/restormel-dev/restormel-cli.git"
   },
   "homepage": "https://github.com/restormel-dev/restormel-cli#readme",
   "bugs": {

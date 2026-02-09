@@ -92,7 +92,7 @@ git push -u origin main
 
 Then apply branch protection and security settings from [docs/REPO-SETUP.md](docs/REPO-SETUP.md).
 
-After the repo exists, see [docs/REPO-SETUP.md](docs/REPO-SETUP.md) for branch protection, visibility, and Dependabot. The prompt in [docs/PROMPT-FIRST-PUSH.md](docs/PROMPT-FIRST-PUSH.md) can be used to re-verify files and commands.
+After the repo exists, see [docs/REPO-SETUP.md](docs/REPO-SETUP.md) for branch protection, visibility, Dependabot, and first-push steps.
 
 ---
 

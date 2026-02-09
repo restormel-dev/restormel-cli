@@ -4,6 +4,23 @@ Use these settings after creating the GitHub repo to keep the project secure and
 
 ---
 
+## 0. First push (one-time)
+
+Before pushing the first time: ensure `.gitignore` includes `node_modules/`, `dist/`, `.env`, `.env.*`, `*.log`, `.DS_Store`; `package.json` has `"repository"` and correct `name`/`license`; no secrets in tracked files. Then from repo root:
+
+```bash
+git init
+git add .
+git commit -m "Initial commit: Restormel CLI"
+git remote add origin https://github.com/restormel-dev/restormel-cli.git
+git branch -M main
+git push -u origin main
+```
+
+Create the repo on GitHub first (public, empty, no template). Then apply the settings below.
+
+---
+
 ## 1. Visibility
 
 - **Repository → Settings → General**
@@ -62,8 +79,15 @@ Add a `SECURITY.md` in the repo root describing how to report vulnerabilities (e
 
 ---
 
+## 6. Discoverability
+
+**About → Description & topics:** Set description (e.g. "Official CLI for Restormel — bank-grade security for Next.js") and topics: `restormel`, `nextjs`, `security`, `cli`, `create-next-app`. README first line should include "Restormel" and "Next.js". Cross-link to restormel-starter in See also. npm uses this repo’s README on the package page.
+
+---
+
 ## Quick checklist
 
+- [ ] First push done (or N/A)
 - [ ] Repo is **Public**
 - [ ] Branch protection rule for **main** (PR required; no force push / no delete)
 - [ ] **Dependabot alerts** and **Dependabot security updates** enabled
