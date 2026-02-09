@@ -10,13 +10,19 @@ import { fileURLToPath } from "url";
 import { spawn } from "child_process";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const RESTORMEL_VERSION = "1.1.0";
+const RESTORMEL_VERSION = "1.2.0";
 const BLUE = "#3b82f6";
 const CURSORRULES_URL =
   "https://raw.githubusercontent.com/restormel-dev/restormel-starter/main/.cursorrules";
 const STARTER_REPO_URL =
   "https://github.com/restormel-dev/restormel-starter";
 const NPM_REGISTRY_URL = "https://registry.npmjs.org/restormel/latest";
+
+/** Canonical landing and next-steps pages from restormel-platform (main branch). */
+const PLATFORM_RAW_BASE =
+  "https://raw.githubusercontent.com/restormel-dev/restormel-platform/main";
+const PLATFORM_PAGE_URL = `${PLATFORM_RAW_BASE}/starter-templates/page.tsx`;
+const PLATFORM_NEXT_STEPS_URL = `${PLATFORM_RAW_BASE}/starter-templates/next-steps/page.tsx`;
 
 /** Supported AI editors; determines which rules file is created/updated. */
 const VALID_EDITORS = ["cursor", "roo", "windsail"] as const;
@@ -131,6 +137,68 @@ function applySupabaseAlternatePorts(cwd: string): void {
   content = content.replace(/\bport\s*=\s*54322\b/g, "port = 54332");
   content = content.replace(/\bport\s*=\s*54323\b/g, "port = 54333");
   fs.writeFileSync(configPath, content, "utf8");
+}
+
+/** Fetch landing and next-steps pages from restormel-platform and write into scaffolded app. */
+async function fetchAndWritePlatformTemplates(cwd: string): Promise<void> {
+  const appDir = path.join(cwd, "src", "app");
+  const pagePath = path.join(appDir, "page.tsx");
+  const nextStepsPagePath = path.join(appDir, "next-steps", "page.tsx");
+
+  const spin = p.spinner();
+  spin.start("Fetching landing and next-steps from Restormel platform...");
+
+  let pageContent: string;
+  let nextStepsContent: string;
+  try {
+    const [pageRes, nextStepsRes] = await Promise.all([
+      fetch(PLATFORM_PAGE_URL, { signal: AbortSignal.timeout(10000) }),
+      fetch(PLATFORM_NEXT_STEPS_URL, { signal: AbortSignal.timeout(10000) }),
+    ]);
+    if (!pageRes.ok || !nextStepsRes.ok) {
+      spin.stop("Platform templates not available.");
+      console.log(chalk.gray("  Landing/next-steps from platform skipped (ensure restormel-platform has starter-templates/)."));
+      return;
+    }
+    pageContent = await pageRes.text();
+    nextStepsContent = await nextStepsRes.text();
+  } catch (err) {
+    spin.stop("Fetch failed.");
+    console.log(chalk.gray("  Could not fetch platform templates:"), err instanceof Error ? err.message : err);
+    return;
+  }
+
+  spin.stop("Fetched.");
+  if (!fs.existsSync(appDir)) fs.mkdirSync(appDir, { recursive: true });
+  fs.writeFileSync(pagePath, pageContent, "utf8");
+  p.log.success("Wrote src/app/page.tsx");
+
+  const nextStepsParent = path.join(appDir, "next-steps");
+  if (!fs.existsSync(nextStepsParent)) fs.mkdirSync(nextStepsParent, { recursive: true });
+  fs.writeFileSync(nextStepsPagePath, nextStepsContent, "utf8");
+  p.log.success("Wrote src/app/next-steps/page.tsx");
+}
+
+/** Ensure globals.css defines tokens and classes used by platform templates. */
+function ensureGlobalsCssTokens(cwd: string): void {
+  const globalsPath = path.join(cwd, "src", "app", "globals.css");
+  if (!fs.existsSync(globalsPath)) return;
+  const content = fs.readFileSync(globalsPath, "utf8");
+  if (content.includes("--accent") && content.includes("btn-primary")) return;
+  const block = `
+/* Restormel platform template tokens (for landing/next-steps pages) */
+:root {
+  --accent: var(--accent, #3b82f6);
+  --foreground: var(--foreground, #0a0a0a);
+  --muted: var(--muted, #71717a);
+  --background: var(--background, #ffffff);
+}
+.glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
+.code-block { font-family: ui-monospace, monospace; font-size: 0.875rem; }
+.btn-primary { background: var(--accent); color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; }
+.btn-secondary { border: 1px solid var(--muted); padding: 0.5rem 1rem; border-radius: 0.375rem; }
+`;
+  fs.appendFileSync(globalsPath, block, "utf8");
 }
 
 function printPostCreateChecklist(): void {
@@ -278,6 +346,9 @@ async function runGreenfield(cwd: string, opts: GreenfieldOptions): Promise<void
 
   applySupabaseAlternatePorts(cwd);
 
+  await fetchAndWritePlatformTemplates(cwd);
+  ensureGlobalsCssTokens(cwd);
+
   console.log();
   p.outro(
     chalk.hex(BLUE)("Success ") +
@@ -394,8 +465,8 @@ async function main(): Promise<void> {
     .version(RESTORMEL_VERSION);
 
   program
-    .command("create")
-    .description("Create a new Restormel project (greenfield) in the current folder")
+    .command("install")
+    .description("Create a new Restormel project (greenfield) in the current folder. Use in a blank directory.")
     .option("--config <id>", "Stack/config to use (e.g. default, minimal). Default: default", "default")
     .option("--editor <editor>", "AI editor rules file: cursor (.cursorrules), roo (.clinerules), or windsail (windsail.yaml)", "cursor")
     .option("--open", "Open the project in the chosen editor after scaffolding (best-effort, may not work on all systems)")
