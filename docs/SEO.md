@@ -23,8 +23,9 @@ Checklist so people find **restormel-cli** and **restormel-starter** on GitHub, 
 
 ---
 
-## npm (restormel-cli when published)
+## npm (restormel-cli)
 
+- **Package:** [restormel](https://www.npmjs.com/package/restormel) — published. Users run `npx restormel`.
 - **package.json:** `description`, `keywords`, `homepage`, `bugs` — all set in this repo.
 - npm uses the repo README on the package page.
 

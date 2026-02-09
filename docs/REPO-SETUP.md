@@ -8,7 +8,7 @@ Use these settings after creating the GitHub repo to keep the project secure and
 
 - **Repository → Settings → General**
 - Under **Danger Zone** (or visibility at top): ensure **Public** is selected.
-- Public is required for trust (auditable source), `npx github:restormel-dev/restormel-cli`, and npm package linking.
+- Public is required for trust (auditable source), `npx restormel` (or `npx github:restormel-dev/restormel-cli`), and npm package linking.
 
 ---
 
