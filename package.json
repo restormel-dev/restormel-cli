@@ -1,6 +1,6 @@
 {
   "name": "restormel",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Official CLI for Restormel — bank-grade security architecture for Next.js",
   "type": "module",
   "main": "./dist/index.js",
