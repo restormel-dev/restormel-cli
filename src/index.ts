@@ -10,7 +10,7 @@ import { fileURLToPath } from "url";
 import { spawn } from "child_process";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const RESTORMEL_VERSION = "1.2.0";
+const RESTORMEL_VERSION = "1.2.1";
 const BLUE = "#3b82f6";
 const CURSORRULES_URL =
   "https://raw.githubusercontent.com/restormel-dev/restormel-starter/main/.cursorrules";
@@ -179,28 +179,6 @@ async function fetchAndWritePlatformTemplates(cwd: string): Promise<void> {
   p.log.success("Wrote src/app/next-steps/page.tsx");
 }
 
-/** Ensure globals.css defines tokens and classes used by platform templates. */
-function ensureGlobalsCssTokens(cwd: string): void {
-  const globalsPath = path.join(cwd, "src", "app", "globals.css");
-  if (!fs.existsSync(globalsPath)) return;
-  const content = fs.readFileSync(globalsPath, "utf8");
-  if (content.includes("--accent") && content.includes("btn-primary")) return;
-  const block = `
-/* Restormel platform template tokens (for landing/next-steps pages) */
-:root {
-  --accent: var(--accent, #3b82f6);
-  --foreground: var(--foreground, #0a0a0a);
-  --muted: var(--muted, #71717a);
-  --background: var(--background, #ffffff);
-}
-.glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
-.code-block { font-family: ui-monospace, monospace; font-size: 0.875rem; }
-.btn-primary { background: var(--accent); color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; }
-.btn-secondary { border: 1px solid var(--muted); padding: 0.5rem 1rem; border-radius: 0.375rem; }
-`;
-  fs.appendFileSync(globalsPath, block, "utf8");
-}
-
 function printPostCreateChecklist(): void {
   console.log(chalk.hex(BLUE).bold("\n  Next steps:\n"));
   console.log(chalk.gray("  • Run: ") + chalk.cyan("npm run dev"));
@@ -347,7 +325,6 @@ async function runGreenfield(cwd: string, opts: GreenfieldOptions): Promise<void
   applySupabaseAlternatePorts(cwd);
 
   await fetchAndWritePlatformTemplates(cwd);
-  ensureGlobalsCssTokens(cwd);
 
   console.log();
   p.outro(
