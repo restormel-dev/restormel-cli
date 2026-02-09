@@ -10,7 +10,7 @@ import { fileURLToPath } from "url";
 import { spawn } from "child_process";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const RESTORMEL_VERSION = "1.0.0";
+const RESTORMEL_VERSION = "1.1.0";
 const BLUE = "#3b82f6";
 const CURSORRULES_URL =
   "https://raw.githubusercontent.com/restormel-dev/restormel-starter/main/.cursorrules";
