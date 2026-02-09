@@ -74,8 +74,9 @@ async function runGreenfield(cwd: string): Promise<void> {
   const sourceUrl = STARTER_REPO_URL.endsWith("/") ? STARTER_REPO_URL : `${STARTER_REPO_URL}/`;
   console.log(chalk.gray(`  Source: ${chalk.hex(BLUE)("official Restormel starter")} — ${sourceUrl}`));
   console.log();
-  const spinner = p.spinner();
-  spinner.start("Creating your Restormel Next.js project in this folder...");
+  console.log(chalk.gray("  Creating your Restormel Next.js project in this folder..."));
+  console.log(chalk.gray("  (You'll see create-next-app output below. This may take a few minutes.)"));
+  console.log();
   try {
     await execa("npx", [
       "create-next-app@latest",
@@ -84,12 +85,11 @@ async function runGreenfield(cwd: string): Promise<void> {
       sourceUrl,
       ".",
     ], { cwd, stdio: "inherit" });
-    spinner.stop("Project created.");
+    console.log();
     p.outro(chalk.hex(BLUE)("Success ") + "🏰 " + chalk.white("Your Restormel project is ready in this folder."));
   } catch (err) {
-    spinner.stop("Creation failed.");
     const msg = err instanceof Error ? err.message : String(err);
-    console.error(chalk.red("Error:"), msg);
+    console.error(chalk.red("\nError:"), msg);
     if (msg.includes("invalid GitHub URL") || msg.includes("Could not locate the repository")) {
       console.error(chalk.yellow("\nMake sure the Restormel starter repo exists and is public:"));
       console.error(chalk.gray(`  ${STARTER_REPO_URL}`));
