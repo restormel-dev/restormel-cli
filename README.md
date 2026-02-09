@@ -21,6 +21,17 @@ One command; the CLI detects the context.
 
 ---
 
+## Next steps (new project)
+
+After the CLI finishes, you're in the new project directory. Then:
+
+1. Run **`npm run dev`**
+2. Open **http://localhost:3000** in your browser
+
+The first screen is an onboarding page that walks you through what's set up, how to set up Git, and a Cursor prompt for defining your app and tech stack.
+
+---
+
 ## Using it
 
 - **New project:** Open a **blank folder** (or one with no `package.json`). Run `npx restormel`. The CLI scaffolds the Restormel Next.js app **in that folder** (no extra subfolder).

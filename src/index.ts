@@ -86,7 +86,16 @@ async function runGreenfield(cwd: string): Promise<void> {
       ".",
     ], { cwd, stdio: "inherit" });
     console.log();
-    p.outro(chalk.hex(BLUE)("Success ") + "🏰 " + chalk.white("Your Restormel project is ready in this folder."));
+    p.outro(
+      chalk.hex(BLUE)("Success ") +
+        "🏰 " +
+        chalk.white("Your Restormel project is ready in this folder.\n  ") +
+        chalk.gray("Run ") +
+        chalk.cyan("npm run dev") +
+        chalk.gray(", then open ") +
+        chalk.cyan("http://localhost:3000") +
+        chalk.gray(" for next steps.")
+    );
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error(chalk.red("\nError:"), msg);
